@@ -1,40 +1,18 @@
-# Codex Cloud setup
+# Cloud setup
 
-`my-design-toolkit` を Codex Cloud の各タスクで利用するためのセットアップです。
+Codex Cloud Environment から共通リソースを読み込むためのbootstrapです。
 
-## 1. GitHub token を用意する
+## Setup script
 
-このrepoはprivateなので、Codex Cloudのsetup scriptから読むためのGitHub fine-grained personal access tokenを用意します。
+Environment の Setup script に次の1行を設定します。
 
-推奨スコープ:
-
-- Repository access: `hinanoa/my-design-toolkit` のみ
-- Repository permissions: **Contents: Read-only**
-
-書き込み権限は不要です。
-
-## 2. Codex Cloud Environment にSecretを登録
-
-CodexのEnvironment設定で次のSecretを追加します。
-
-```text
-DESIGN_TOOLKIT_TOKEN=<fine-grained token>
+```bash
+curl -fsSL https://raw.githubusercontent.com/hinanoa/q4x7m2v9k8p3/main/cloud/setup.sh | bash
 ```
 
-Secretはsetup時のprivate repo取得にだけ使います。
+GitHub token / Secret は不要です。
 
-## 3. Setup scriptを設定
-
-Codex Cloud EnvironmentのSetup script欄に [`setup.sh`](setup.sh) の内容を貼り付けます。
-
-通常は追加の環境変数は不要です。必要なら以下を設定できます。
-
-```text
-DESIGN_TOOLKIT_REPO=hinanoa/my-design-toolkit
-DESIGN_TOOLKIT_REF=main
-```
-
-Setupが成功すると、Cloudコンテナに次が作られます。
+Setupが成功するとCloudコンテナに次が作られます。
 
 ```text
 ~/.agents/skills/
@@ -44,33 +22,27 @@ Setupが成功すると、Cloudコンテナに次が作られます。
 
 ~/.design-toolkit/
 └── design-library/
-    ├── apple/DESIGN.md
-    ├── linear.app/DESIGN.md
-    └── ...
 
 ~/.codex/AGENTS.md
 └── GitHub Actions budget policy
 ```
 
-デザイン集はsetup時にキャッシュされるため、Codexのagent phaseでGitHubへアクセスしなくても参照できます。
+デザイン資料はsetup時にローカルへキャッシュされるため、agent phaseで外部GitHubアクセスを必要としません。
 
-## 4. 動作確認
+## 動作確認
 
-新しいCloudタスクで例えば次のように依頼します。
-
-```text
-my-design-toolkit の Linear 系を使ってこの画面をデザインして。
-Hallmarkも適用して、AIっぽいUIを避けて。
-```
-
-または明示的に確認する場合:
+新しいCloudタスクで例えば次を依頼します。
 
 ```text
-利用可能なdesign-toolkitのデザインを一覧にして。
+design-toolkitで利用可能なデザインを一覧にして。
 ```
 
-## 更新時
+または:
 
-Cloud Environmentはコンテナをキャッシュするため、`my-design-toolkit` を更新したあと新しい内容を確実に取り込みたい場合はEnvironmentのcacheをリセットしてください。
+```text
+design-toolkitのLinear系を使って実装して。Hallmarkも適用して。
+```
 
-`DESIGN_TOOLKIT_REF` を特定commit SHAに固定すれば、Cloud環境を完全に再現可能な状態にもできます。
+## 更新
+
+toolkit更新後に古い内容が残る場合は、Codex Cloud Environment のcacheをリセットして新しいタスクを開始します。
