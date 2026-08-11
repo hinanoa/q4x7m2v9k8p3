@@ -1,0 +1,26 @@
+# Global Codex working agreements
+
+## GitHub Actions budget policy
+
+Treat GitHub-hosted CI as a scarce, billable resource. Minimize GitHub Actions minutes by default across every repository.
+
+- Do not push after each edit. Batch related changes locally and push only after the repair or implementation cycle is ready for remote validation.
+- Use at most one push per repair cycle by default. Make an additional push only when remote-only validation is genuinely necessary and cannot be reproduced locally.
+- When CI fails, inspect and group all relevant failures first, identify likely shared root causes, then make a consolidated fix. Do not use repeated push-and-see debugging.
+- Before pushing, run every relevant check that is reasonably available locally, such as formatting, linting, type checking, targeted tests, and builds. Fix local failures before using GitHub-hosted CI.
+- Do not add diagnostic, temporary, experimental, or throwaway workflows under `.github/workflows/` merely to investigate a problem.
+- Do not create commits or pushes whose only purpose is to obtain more CI logs. Use existing run/job logs and local reproduction instead.
+- Do not proactively dispatch or otherwise invoke Full CI unless the user explicitly asks for Full CI. If an existing workflow automatically runs Full CI on push, reduce pushes rather than using CI as an iterative debugger.
+- When creating or materially editing ordinary CI workflows, configure `concurrency` and `cancel-in-progress: true` so superseded runs are cancelled. Do not change deployment/release concurrency semantics without explicit instruction.
+- Do not introduce unnecessary `push` triggers. Keep workflow event scope as narrow as the repository requirements allow, using appropriate branch/path filters or pull-request events where applicable.
+- Preserve required branch protection, release, deployment, and security checks. Cost reduction must not silently weaken required safeguards.
+
+### Preferred repair loop
+
+1. Inspect the repository, current diff, workflow definitions, and all available failing CI evidence.
+2. Reproduce failures locally where possible.
+3. Make the complete related fix locally.
+4. Run relevant local format/lint/typecheck/test/build checks.
+5. Review the final diff and confirm no temporary workflow/debug artifacts were added.
+6. Commit coherently and push once.
+7. Only if remote CI reveals a genuinely remote-only issue, repeat the loop and make the minimum additional push.
