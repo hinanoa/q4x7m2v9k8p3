@@ -5,6 +5,11 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=/dev/null
 source "$ROOT_DIR/versions.env"
 
+INSTALLED_HELPER="${HOME}/.agents/skills/design-toolkit/scripts/use-design.sh"
+if [[ -f "$INSTALLED_HELPER" && -d "${DESIGN_TOOLKIT_HOME:-${HOME}/.design-toolkit}/design-library" ]]; then
+  exec bash "$INSTALLED_HELPER" "$@"
+fi
+
 for cmd in curl unzip; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
     echo "Required command not found: $cmd" >&2
