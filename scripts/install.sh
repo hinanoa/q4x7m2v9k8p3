@@ -26,7 +26,7 @@ fetch_repo() {
   local out_dir="$TMP_DIR/${key}"
 
   mkdir -p "$out_dir"
-  echo "Fetching ${repo}@${commit}"
+  echo "Fetching ${repo}@${commit}" >&2
   curl -fsSL "https://github.com/${repo}/archive/${commit}.zip" -o "$zip_path"
   unzip -q "$zip_path" -d "$out_dir"
 
