@@ -24,21 +24,15 @@ codexに投げるべきと判断しました。
 
 That sentence must be followed immediately by a complete ready-to-paste Codex instruction. The instruction should contain the relevant repository, authoritative docs, goal, scope, out-of-scope boundaries, required implementation, local verification, GitHub Actions budget constraints, stopping condition, and PR handoff. When safe parallel work exists, ChatGPT should split the work into independent prompts that may be launched concurrently.
 
-For normal implementation work, the Codex prompt must explicitly require the complete GitHub publication handoff before the task is considered finished:
+For Codex Cloud work, read `docs/CODEX_CLOUD_PUBLICATION.md`. The task must self-review, validate, and create a coherent local commit. It must not assume the sandbox shell has an authenticated `origin`, `gh`, or GitHub token. If the task exposes a callable native Codex PR/publish mechanism, use it. Otherwise return a `PUBLICATION_PENDING_UI` handoff containing the branch/worktree, commit SHA, intended base, proposed PR title/body, verification results, and exact blocker, and tell the user to use the Codex task's Create PR / Push PR / Publish control. Do not repeatedly attempt shell push/auth workarounds and never invent a PR URL.
 
-1. self-review the final diff;
-2. commit the completed work coherently;
-3. push the dedicated task branch;
-4. create or update the intended pull request;
-5. return the PR URL in the final Codex response.
-
-If the environment genuinely cannot create a PR, Codex should push the branch when possible and report the exact branch and blocker. A task whose final work exists only inside a Codex session is not considered handed off or monitorable.
+For local/CLI Codex work with an authenticated remote, the conventional handoff remains self-review -> commit -> push -> create/update PR -> return PR URL.
 
 When direct work by ChatGPT is more efficient, ChatGPT should proceed directly instead of emitting the delegation sentence.
 
-After Codex creates a PR, ChatGPT should normally handle routine PR review and continuation itself: inspect the diff/checks/review state, consolidate repairs on the same PR, and merge when appropriate and authorized. The user should not be used as a manual relay for ordinary PR inspection and repair steps.
+After a Codex PR becomes GitHub-visible, ChatGPT should normally handle routine PR review and continuation itself: inspect the diff/checks/review state, consolidate repairs on the same PR, and merge when appropriate and authorized. The user should not be used as a manual relay for ordinary PR inspection and repair steps.
 
-The GitHub PR monitor only sees GitHub-visible state. It can detect branches/PRs, review them, and prepare the next ready-to-paste Codex instruction, but it does not itself prove that a fresh Codex Cloud task was launched. Unless a real Codex task-launch tool is available and used, the user submits the next Codex instruction when a new Codex execution is required.
+The GitHub PR monitor only sees GitHub-visible state. It cannot see a Cloud task that is still `PUBLICATION_PENDING_UI`. Unless a real Codex task-launch tool is available and used, the user still submits the next Codex instruction when a new Codex execution is required.
 
 ## Current bounded objective
 
@@ -54,13 +48,13 @@ Before activating it, replace `INACTIVE` with one bounded objective that contain
 - Authority: project/specification documents that control behavior.
 - Required implementation: concrete deliverables, including migration/schema/docs/tests when relevant.
 - Local verification: exact or discoverable formatter/lint/typecheck/test/build commands that must be run locally where possible.
-- PR handoff: self-review, commit, push the coherent task branch once by default, create/update the intended PR, and return its URL. If PR creation is unavailable, report the pushed branch and blocker explicitly.
+- PR handoff: follow `docs/CODEX_CLOUD_PUBLICATION.md` for Cloud tasks; use normal commit/push/PR handoff only when an authenticated remote is genuinely available.
 - Stopping condition: objective evidence that determines completion.
 - Blockers: conditions that justify stopping for user input.
 
 ## Follow-up repair contract
 
-If a PR created from this objective later fails CI or receives actionable review feedback, the follow-up objective should normally target the **same PR branch**. Diagnose all related failures together, repair locally, rerun relevant checks, then push a consolidated update rather than opening a replacement PR or repeatedly pushing speculative fixes.
+If a PR created from this objective later fails CI or receives actionable review feedback, the follow-up objective should normally target the **same PR branch**. Diagnose all related failures together, repair locally, rerun relevant checks, then publish a consolidated update rather than opening a replacement PR or repeatedly pushing speculative fixes.
 
 ## Parallel execution
 
@@ -81,6 +75,7 @@ For discovered repositories, the watch should:
 2. notify only on material state changes;
 3. when repair is needed, provide a ready-to-paste Codex follow-up instruction for the same PR;
 4. when a PR passes, provide the next Codex instruction or identify the product decision needed before another bounded objective can be activated;
-5. treat a pushed Codex branch with no PR as an incomplete publication handoff and provide the exact PR-creation follow-up rather than assuming the task is complete.
+5. treat a GitHub-visible Codex branch with no PR as an incomplete publication handoff and provide/create the appropriate PR continuation when authorized;
+6. remember that a `PUBLICATION_PENDING_UI` Cloud task is invisible to GitHub monitoring until the user publishes it through the Codex client.
 
 No per-repository watch-list edit should normally be required for a repository created from this template. If the monitoring task is paused or unavailable, tell the user rather than assuming the repository is being watched.
