@@ -12,6 +12,22 @@ docs/CODEX_LONG_RUN.md の Current bounded objective を最後まで実行して
 
 The repository-specific `AGENTS.md` rules always take precedence over this generic handoff.
 
+## Cross-repository ChatGPT delegation contract
+
+The following rule applies to all of the user's repositories, not only repositories created from this template.
+
+When ChatGPT decides that a task should be delegated to Codex, the user-facing response must begin with the exact sentence:
+
+```text
+codexに投げるべきと判断しました。
+```
+
+That sentence must be followed immediately by a complete ready-to-paste Codex instruction. The instruction should contain the relevant repository, authoritative docs, goal, scope, out-of-scope boundaries, required implementation, local verification, GitHub Actions budget constraints, stopping condition, and PR handoff. When safe parallel work exists, ChatGPT should split the work into independent prompts that may be launched concurrently.
+
+When direct work by ChatGPT is more efficient, ChatGPT should proceed directly instead of emitting the delegation sentence.
+
+After Codex creates a PR, ChatGPT should normally handle routine PR review and continuation itself: inspect the diff/checks/review state, consolidate repairs on the same PR, and merge when appropriate and authorized. The user should not be used as a manual relay for ordinary PR inspection and repair steps.
+
 ## Current bounded objective
 
 **INACTIVE**
