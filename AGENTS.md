@@ -32,8 +32,9 @@ For substantial multi-step work, use the repo-local `project-long-run` skill and
 
 - Do not invent work when the bounded objective is `INACTIVE`.
 - Read repository-specific product/spec/security/architecture rules before implementation; they override the generic long-run skill.
-- Continue through implementation, local verification, repair, final diff review, coherent commit, and one push by default.
-- Create or update a draft PR when the environment supports it.
+- Continue through implementation, local verification, repair, final diff review, coherent commit, one push, and GitHub PR handoff by default.
+- Unless the user explicitly requests a no-PR workflow or the repository genuinely cannot support pull requests, Codex completion requires: commit the completed work, push the task branch, create or update a PR to the intended base branch, and return the PR URL in the final response.
+- Do not report a delegated implementation task as complete while its finished work exists only inside the Codex task/session and is not GitHub-visible. If PR creation is genuinely unavailable, push the branch when possible and report the exact branch plus blocker instead of pretending the handoff is complete.
 - If CI or review feedback requires a follow-up, normally repair the same PR branch instead of creating a replacement PR.
 - Do not stop for routine implementation decisions that can be resolved from the repository, tests, authoritative docs, or the active objective.
 - Stop only for a genuine blocker, destructive/irreversible operation not authorized by the objective, or a product/spec decision that cannot safely be inferred.
@@ -46,11 +47,14 @@ This is a user-level operating rule and is not limited to one repository. Apply 
 
 - When ChatGPT judges that implementation should be delegated to Codex instead of being performed directly in the current chat, the user-facing response must begin with the exact sentence: `codexに投げるべきと判断しました。`
 - Immediately after that sentence, provide the complete ready-to-paste Codex instruction. Do not require the user to reconstruct scope, acceptance criteria, file paths, verification steps, or constraints from surrounding conversation.
+- Every normal implementation prompt delegated to Codex must include the GitHub handoff explicitly: self-review the final diff, commit coherently, push the dedicated branch, create/update the PR, and return the PR URL. If the environment cannot create a PR, it must say so explicitly and return the pushed branch and exact blocker.
 - When independent write scopes make safe parallelism possible, split the work into clearly named tasks and state that they may be submitted to Codex concurrently.
 - Preserve repository-specific constraints in every generated Codex prompt, including authoritative docs, allowed/out-of-scope paths, local verification, GitHub Actions budget rules, and the expected PR handoff.
 - If ChatGPT judges that direct work is more efficient, do not emit the delegation sentence; continue the work directly.
 - After Codex creates a PR, ChatGPT should normally inspect the diff, CI/check state, and review threads itself; make or specify consolidated repairs on the same PR; and merge when appropriate and authorized, rather than making the user manually relay routine review/fix steps.
+- The PR monitor can only act on GitHub-visible branches/PRs. A Codex task marked complete without a push/PR is not considered handed off and may be invisible to monitoring.
 - A successful Codex PR is not automatically the end of the workflow. ChatGPT should decide whether the next bounded objective can begin, whether a quality/product decision is required, or whether another repair cycle is needed.
+- Current ChatGPT tooling may monitor GitHub and prepare the next Codex prompt, but it must not imply that a fresh Codex Cloud task has been launched automatically unless an actual Codex task-launch tool is available and used. Until then, the user submits the next ready-to-paste Codex instruction when a new Codex task is required.
 
 ## Design resources
 
