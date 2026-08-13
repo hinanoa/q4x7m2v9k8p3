@@ -13,6 +13,7 @@ Treat GitHub-hosted CI as a scarce, billable resource. Minimize GitHub Actions m
 - Do not proactively dispatch or otherwise invoke Full CI unless the user explicitly asks for Full CI. If an existing workflow automatically runs Full CI on push, reduce pushes rather than using CI as an iterative debugger.
 - When creating or materially editing ordinary CI workflows, configure `concurrency` and `cancel-in-progress: true` so superseded runs are cancelled. Do not change deployment/release concurrency semantics without explicit instruction.
 - Do not introduce unnecessary `push` triggers. Keep workflow event scope as narrow as repository requirements allow, using appropriate branch/path filters or pull-request events where applicable.
+- If the same ordinary verification would run for both a feature-branch `push` and the subsequent `pull_request`, prefer PR-only hosted verification plus `workflow_dispatch` unless the repository has a concrete requirement for independent push validation.
 - Preserve required branch protection, release, deployment, and security checks. Cost reduction must not silently weaken required safeguards.
 
 ### Preferred repair loop
@@ -24,6 +25,20 @@ Treat GitHub-hosted CI as a scarce, billable resource. Minimize GitHub Actions m
 5. Review the final diff and confirm no temporary workflow/debug artifacts were added.
 6. Commit coherently and push once.
 7. Only if remote CI reveals a genuinely remote-only issue, repeat the loop and make the minimum additional push.
+
+## Long-running Codex work
+
+For substantial multi-step work, use the repo-local `project-long-run` skill and the active bounded objective in `docs/CODEX_LONG_RUN.md`.
+
+- Do not invent work when the bounded objective is `INACTIVE`.
+- Read repository-specific product/spec/security/architecture rules before implementation; they override the generic long-run skill.
+- Continue through implementation, local verification, repair, final diff review, coherent commit, and one push by default.
+- Create or update a draft PR when the environment supports it.
+- If CI or review feedback requires a follow-up, normally repair the same PR branch instead of creating a replacement PR.
+- Do not stop for routine implementation decisions that can be resolved from the repository, tests, authoritative docs, or the active objective.
+- Stop only for a genuine blocker, destructive/irreversible operation not authorized by the objective, or a product/spec decision that cannot safely be inferred.
+
+Repos created from this template are also intended to be added to the user's ChatGPT `Codex PR Watch` monitoring task when ChatGPT first sets up substantial Codex work. Repository files cannot register that external ChatGPT task themselves; follow the handoff notes in `docs/CODEX_LONG_RUN.md`.
 
 ## Design resources
 
