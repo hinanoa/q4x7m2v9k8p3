@@ -40,16 +40,18 @@ Multiple Codex tasks may run in parallel only when their write scopes are indepe
 
 ## ChatGPT PR monitoring handoff
 
-Repos created from the shared hinanoa template are intended to participate in the user's ChatGPT `Codex PR Watch` monitoring workflow. The repository itself cannot register a ChatGPT Scheduled/Monitoring task.
+Repos created from the shared hinanoa template are intended to participate in the user's ChatGPT `Codex PR Watch` monitoring workflow. The repository itself cannot register or resume a ChatGPT Scheduled/Monitoring task.
 
-When ChatGPT first sets up or begins substantial work on a newly created repository from this template, it should:
+The watch is expected to run hourly and automatically discover accessible `hinanoa` repositories that contain both of these long-run markers:
 
-1. verify that the repository has GitHub access;
-2. add the repository's `owner/name` to the user's existing `Codex PR Watch` monitoring task, if that task is active;
-3. keep the monitoring task at hourly frequency unless the user changes it;
-4. monitor new/updated Codex or agent branches, PR diffs, CI/check state, and review threads;
-5. notify only on material state changes;
-6. when repair is needed, provide a ready-to-paste Codex follow-up instruction for the same PR;
-7. when a PR passes, provide the next Codex instruction or identify the product decision needed before another bounded objective can be activated.
+- `docs/CODEX_LONG_RUN.md`
+- `.agents/skills/project-long-run/SKILL.md`
 
-If the monitoring task is paused or unavailable, tell the user rather than assuming the repository is being watched.
+For discovered repositories, the watch should:
+
+1. monitor new/updated Codex or agent branches, PR diffs, CI/check state, and review threads;
+2. notify only on material state changes;
+3. when repair is needed, provide a ready-to-paste Codex follow-up instruction for the same PR;
+4. when a PR passes, provide the next Codex instruction or identify the product decision needed before another bounded objective can be activated.
+
+No per-repository watch-list edit should normally be required for a repository created from this template. If the monitoring task is paused or unavailable, tell the user rather than assuming the repository is being watched.

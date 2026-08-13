@@ -22,9 +22,9 @@ When a new repository is created from this template:
 3. Prefer local validation before push. Hosted CI should not duplicate the same checks on both feature-branch `push` and `pull_request` unless there is a concrete repository requirement.
 4. Prefer PR-based hosted checks plus `workflow_dispatch`, and use `concurrency` / `cancel-in-progress: true` for ordinary CI where appropriate.
 5. Codex should push once by default and create/update a draft PR when supported. CI/review repairs should normally update the same PR.
-6. When ChatGPT first sets up substantial work for the new repository, add its `owner/name` to the user's active ChatGPT `Codex PR Watch` monitoring task. The repository cannot register that ChatGPT task by itself.
+6. The user's ChatGPT `Codex PR Watch` is expected to auto-discover accessible `hinanoa` repositories that contain both `docs/CODEX_LONG_RUN.md` and `.agents/skills/project-long-run/SKILL.md`; no per-repo watch-list edit should be required.
 7. The watch should remain hourly unless the user changes it and should notify only on material branch/PR/CI/review changes, supplying a ready-to-paste Codex repair instruction or the next Codex instruction.
-8. If the ChatGPT conversation associated with the monitoring task has been deleted and the task is therefore paused, resume/recreate the monitoring task before relying on notifications.
+8. The repository cannot create or resume the external ChatGPT monitoring task itself. If the task is paused or if its associated ChatGPT conversation has been deleted, resume/recreate the task before relying on notifications.
 
 ## Fixed Codex launch prompt
 

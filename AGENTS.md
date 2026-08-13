@@ -38,7 +38,7 @@ For substantial multi-step work, use the repo-local `project-long-run` skill and
 - Do not stop for routine implementation decisions that can be resolved from the repository, tests, authoritative docs, or the active objective.
 - Stop only for a genuine blocker, destructive/irreversible operation not authorized by the objective, or a product/spec decision that cannot safely be inferred.
 
-Repos created from this template are also intended to be added to the user's ChatGPT `Codex PR Watch` monitoring task when ChatGPT first sets up substantial Codex work. Repository files cannot register that external ChatGPT task themselves; follow the handoff notes in `docs/CODEX_LONG_RUN.md`.
+Repos created from this template are intended to be automatically discoverable by the user's hourly ChatGPT `Codex PR Watch` monitoring task through the shared long-run markers in this repository. Repository files cannot create or resume that external ChatGPT task themselves; follow the handoff notes in `docs/CODEX_LONG_RUN.md`.
 
 ## Design resources
 
