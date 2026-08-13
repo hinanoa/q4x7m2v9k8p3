@@ -23,8 +23,8 @@ Treat GitHub-hosted CI as a scarce, billable resource. Minimize GitHub Actions m
 3. Make the complete related fix locally.
 4. Run relevant local format/lint/typecheck/test/build checks.
 5. Review the final diff and confirm no temporary workflow/debug artifacts were added.
-6. Commit coherently and push once.
-7. Only if remote CI reveals a genuinely remote-only issue, repeat the loop and make the minimum additional push.
+6. Commit coherently and publish once using the environment's supported GitHub path.
+7. Only if remote CI reveals a genuinely remote-only issue, repeat the loop and make the minimum additional publication/update.
 
 ## Long-running Codex work
 
@@ -32,9 +32,12 @@ For substantial multi-step work, use the repo-local `project-long-run` skill and
 
 - Do not invent work when the bounded objective is `INACTIVE`.
 - Read repository-specific product/spec/security/architecture rules before implementation; they override the generic long-run skill.
-- Continue through implementation, local verification, repair, final diff review, coherent commit, one push, and GitHub PR handoff by default.
-- Unless the user explicitly requests a no-PR workflow or the repository genuinely cannot support pull requests, Codex completion requires: commit the completed work, push the task branch, create or update a PR to the intended base branch, and return the PR URL in the final response.
-- Do not report a delegated implementation task as complete while its finished work exists only inside the Codex task/session and is not GitHub-visible. If PR creation is genuinely unavailable, push the branch when possible and report the exact branch plus blocker instead of pretending the handoff is complete.
+- Continue through implementation, local verification, repair, final diff review, and coherent commit by default.
+- Read `docs/CODEX_CLOUD_PUBLICATION.md` before attempting GitHub publication from a Codex Cloud task.
+- Do not assume the Codex Cloud sandbox shell has `origin`, GitHub credentials, `gh` authentication, or a callable PR tool. Make at most one lightweight publication capability check; do not waste time repairing remotes/auth inside the sandbox.
+- If a native Codex PR/publish action is callable, use it. If it is not callable, return the documented `PUBLICATION_PENDING_UI` handoff and instruct the user to use the Codex task's Create PR / Push PR / Publish control rather than repeatedly attempting shell `git push`.
+- For non-cloud environments with a genuinely authenticated remote, the normal completion path remains: commit, one push by default, create/update the intended PR, and return its URL.
+- Do not report a delegated implementation as GitHub-handed-off until its finished work is GitHub-visible. Never invent a PR URL.
 - If CI or review feedback requires a follow-up, normally repair the same PR branch instead of creating a replacement PR.
 - Do not stop for routine implementation decisions that can be resolved from the repository, tests, authoritative docs, or the active objective.
 - Stop only for a genuine blocker, destructive/irreversible operation not authorized by the objective, or a product/spec decision that cannot safely be inferred.
@@ -47,12 +50,13 @@ This is a user-level operating rule and is not limited to one repository. Apply 
 
 - When ChatGPT judges that implementation should be delegated to Codex instead of being performed directly in the current chat, the user-facing response must begin with the exact sentence: `codexに投げるべきと判断しました。`
 - Immediately after that sentence, provide the complete ready-to-paste Codex instruction. Do not require the user to reconstruct scope, acceptance criteria, file paths, verification steps, or constraints from surrounding conversation.
-- Every normal implementation prompt delegated to Codex must include the GitHub handoff explicitly: self-review the final diff, commit coherently, push the dedicated branch, create/update the PR, and return the PR URL. If the environment cannot create a PR, it must say so explicitly and return the pushed branch and exact blocker.
+- Every normal Codex Cloud implementation prompt must separate implementation from publication: require self-review, local verification, and a coherent commit; then require use of a callable native Codex PR/publish path when available, otherwise a `PUBLICATION_PENDING_UI` handoff. Do not tell Cloud tasks to spend time manufacturing an `origin` remote or GitHub login inside the sandbox.
+- Every local/CLI Codex prompt running in an authenticated Git repository may retain the normal `commit -> push -> PR -> PR URL` handoff.
 - When independent write scopes make safe parallelism possible, split the work into clearly named tasks and state that they may be submitted to Codex concurrently.
 - Preserve repository-specific constraints in every generated Codex prompt, including authoritative docs, allowed/out-of-scope paths, local verification, GitHub Actions budget rules, and the expected PR handoff.
 - If ChatGPT judges that direct work is more efficient, do not emit the delegation sentence; continue the work directly.
-- After Codex creates a PR, ChatGPT should normally inspect the diff, CI/check state, and review threads itself; make or specify consolidated repairs on the same PR; and merge when appropriate and authorized, rather than making the user manually relay routine review/fix steps.
-- The PR monitor can only act on GitHub-visible branches/PRs. A Codex task marked complete without a push/PR is not considered handed off and may be invisible to monitoring.
+- After a Codex PR becomes GitHub-visible, ChatGPT should normally inspect the diff, CI/check state, and review threads itself; make or specify consolidated repairs on the same PR; and merge when appropriate and authorized, rather than making the user manually relay routine review/fix steps.
+- The PR monitor can only act on GitHub-visible branches/PRs. `PUBLICATION_PENDING_UI` is therefore not monitorable until the user publishes the task through the Codex UI/client.
 - A successful Codex PR is not automatically the end of the workflow. ChatGPT should decide whether the next bounded objective can begin, whether a quality/product decision is required, or whether another repair cycle is needed.
 - Current ChatGPT tooling may monitor GitHub and prepare the next Codex prompt, but it must not imply that a fresh Codex Cloud task has been launched automatically unless an actual Codex task-launch tool is available and used. Until then, the user submits the next ready-to-paste Codex instruction when a new Codex task is required.
 
