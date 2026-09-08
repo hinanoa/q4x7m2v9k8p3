@@ -69,3 +69,15 @@ Repo-local Codex skills live under `.agents/skills/` and require no Cloud Enviro
 - For Apple-platform interface work, also use `apple-hig`.
 - If the user asks you to choose a design direction, use `design-toolkit` to compare a small number of suitable references before implementing.
 - Use named brands as visual references only. Do not copy logos, trademarks, proprietary assets, distinctive branded illustrations, or exact page compositions.
+
+<!-- BEGIN subagent-wait-policy -->
+## Subagent wait policy
+
+Apply this rule whenever waiting for a spawned subagent:
+
+- Every `wait_agent` call must explicitly set `timeout_ms` to twice the estimated remaining time until completion, expressed in milliseconds.
+- If the remaining time cannot be estimated, use `timeout_ms: 120000`.
+- Do not shorten the timeout merely to poll for status. A completion notification ends the wait early.
+- After a timeout, update the remaining-time estimate and apply the same rule again.
+- This policy applies uniformly to every parent agent and every subagent wait.
+<!-- END subagent-wait-policy -->
