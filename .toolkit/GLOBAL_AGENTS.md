@@ -11,8 +11,10 @@ Keep global instructions minimal. Repository-local `AGENTS.md`, authoritative sp
 - Do not proactively run Full CI unless the user explicitly requests it or a repository-specific release/security rule requires it.
 - Stop only for a genuine blocker, an unauthorized destructive/irreversible operation, or a specification/product decision that cannot safely be inferred.
 
-## Subagent budget
+## Subagent budget and waiting
 
 Default to single-agent execution. Do not spawn subagents for routine repository inspection, file reading, status checks, simple research, sequential work, or changes the primary agent can complete directly.
 
-Spawn the minimum number of subagents only when the user explicitly requests parallel agents or when independent parallel work/specialized investigation has a clear expected benefit that outweighs the additional token and context cost. Give each subagent a distinct non-overlapping scope and concrete deliverable. Do not spawn duplicate reviewer/research agents for the same question, and do not replace a usable subagent result by launching another agent without a concrete reason.
+Spawn the minimum number of subagents only when the user explicitly requests parallel agents or when independent parallel work/specialized investigation has a clear expected benefit that outweighs the additional token and context cost. Give each subagent a distinct non-overlapping scope and concrete deliverable. Do not spawn duplicate reviewer/research agents for the same question, and do not replace a usable/running subagent by launching another one without concrete evidence that it failed or is blocked.
+
+After spawning a subagent, prefer completion notifications/events over polling. Do not repeatedly call wait/status/check at short intervals while the same subagent is still running. If an explicit timeout is unavoidable, use a long timeout appropriate to the task (default at least 120 seconds when there is no better estimate); after a timeout, do not immediately poll again—continue useful parent work or wait a comparable/longer interval before rechecking. Never launch duplicate copies of the same unfinished task merely to make it finish sooner.
