@@ -9,6 +9,12 @@ Keep always-on guidance small. Load detailed workflow or domain documentation on
 - When a repository document is named as authoritative for the area being changed, use it. Do not load unrelated reference material merely because it exists.
 - Resolve routine implementation choices from the codebase, relevant docs, and tests without asking for approval. Stop only for a genuine blocker, an unauthorized destructive/irreversible operation, or a product/specification decision that cannot safely be inferred.
 
+## Subagent budget
+
+Default to single-agent execution. Do not spawn subagents for routine repository inspection, file reading, status checks, simple research, sequential work, or changes the primary agent can complete directly.
+
+Spawn the minimum number of subagents only when the user explicitly requests parallel agents or when independent parallel work/specialized investigation has a clear expected benefit that outweighs the additional token and context cost. Give each subagent a distinct non-overlapping scope and concrete deliverable. Do not spawn duplicate reviewer/research agents for the same question, and do not replace a usable subagent result by launching another agent without a concrete reason.
+
 ## GitHub Actions budget
 
 Treat GitHub-hosted CI as a scarce, billable resource.
