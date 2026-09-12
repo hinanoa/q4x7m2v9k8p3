@@ -1,62 +1,27 @@
 ---
 name: project-long-run
-description: Execute a substantial repository objective autonomously from inspection through local validation, repair, commit, push, and PR handoff while obeying repository-specific AGENTS.md rules.
+description: Execute an active bounded objective in docs/CODEX_LONG_RUN.md end-to-end. Use only for substantial autonomous work with a defined stopping condition.
 ---
 
-# Project Long-Run Execution
+# Project long-run
 
-Use this skill for substantial, multi-step work where the repository defines a bounded objective in `docs/CODEX_LONG_RUN.md`.
+Use `docs/CODEX_LONG_RUN.md` as the task contract. If its `Current bounded objective` is inactive or lacks an objective completion condition, do not invent one unless the user asked you to establish it.
 
-## Authority and scope
+## Load only what the objective needs
 
-1. Read the repository `AGENTS.md` first.
-2. Read `docs/CODEX_LONG_RUN.md` and the authoritative project/specification documents it names.
-3. Repository-specific security, privacy, architecture, data-integrity, product-rule, platform, and CI rules always override this generic skill.
-4. Do not invent an objective. If `Current bounded objective` is inactive or missing a verifiable stopping condition, stop and report that the objective must be activated.
-5. Stay inside the active objective. Do not opportunistically add unrelated features or broad refactors.
+- Follow `AGENTS.md`.
+- Read the authoritative project/specification docs named by the active objective and any additional source files needed for the requested area.
+- Do not preload a fixed repository map or unrelated architecture/product/reference docs.
+- Load `docs/CODEX_CLOUD_PUBLICATION.md` only when publication is actually being attempted.
 
-## Autonomous execution loop
+## Execute to the stated stopping condition
 
-For an active objective:
+Implement the complete bounded objective, run the relevant local verification required by the objective/repository, repair failures caused by the work, review the final diff, and commit coherently.
 
-1. Inspect the repository state, relevant implementation, tests, docs, and existing failures before editing.
-2. Form an internal implementation plan and identify dependencies and risk boundaries.
-3. Implement the complete objective rather than stopping after scaffolding or a partial happy path.
-4. Run the locally available checks named by the objective and `AGENTS.md`.
-5. Diagnose failures, fix root causes, and rerun the relevant local checks until they pass or a genuine blocker is reached.
-6. Review the final diff for scope creep, debug artifacts, secrets, unsafe logging, temporary workarounds, and accidental architecture/spec changes.
-7. Commit coherently and push once by default. Additional pushes are allowed only for a genuinely remote-only issue or an explicitly requested follow-up.
-8. Create or update a draft pull request when the environment supports it. If PR creation is unavailable, ensure the remote branch is pushed and report the exact branch name.
-9. For follow-up work caused by CI or review feedback, update the same PR branch instead of opening a replacement PR unless the existing PR is no longer the correct unit of work.
+Do not stop after scaffolding or the first implementation if the objective explicitly requires running, inspecting, repairing, or verifying the result. Do not extend beyond the stated scope merely to be thorough.
 
-## Do not stop for routine decisions
+Resolve routine implementation decisions from the repository, relevant docs, and tests. Stop only for a genuine external blocker, an unauthorized destructive/irreversible operation, irreconcilable authoritative requirements, or a required product/specification decision that cannot safely be inferred.
 
-Do not ask for approval for ordinary implementation choices that can be resolved from repository conventions, authoritative docs, tests, or the active objective. Prefer the least destructive compatible choice.
+Hosted CI is not an iterative debugger. Follow the GitHub Actions budget in `AGENTS.md` and use one publication/update per completed repair cycle by default.
 
-Stop only for a genuine blocker, such as:
-
-- missing external credentials or inaccessible infrastructure required to verify the objective;
-- mutually incompatible authoritative requirements;
-- a destructive or irreversible operation not authorized by the objective;
-- a required product/specification decision that cannot be inferred safely;
-- an inactive or materially underspecified bounded objective.
-
-When blocked, preserve completed work, run all still-possible validation, push a coherent branch if appropriate, and state the blocker precisely.
-
-## GitHub Actions budget
-
-Treat GitHub-hosted Actions as a scarce resource. Local validation is the default. Do not use repeated push-and-see debugging, temporary workflows, or Full CI unless explicitly authorized by `AGENTS.md` or the active objective.
-
-When the same verification would run on both an ordinary feature-branch `push` and the subsequent `pull_request`, prefer PR-only hosted verification plus `workflow_dispatch` unless the repository has a concrete reason to validate branch pushes independently.
-
-## Completion report
-
-At completion, report:
-
-- what changed;
-- the local checks actually run and their results;
-- any checks not run and why;
-- branch / commit / PR state;
-- any residual risk or genuine blocker.
-
-Do not claim verification that was not executed.
+At completion, report the actual verification performed, branch/commit/PR state, and any remaining blocker or human-only review requirement. Never claim a check that was not run.
