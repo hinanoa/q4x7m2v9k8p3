@@ -26,7 +26,10 @@ fetch ".agents/skills/design-toolkit/SKILL.md" "$SKILLS_DIR/design-toolkit/SKILL
 fetch ".agents/skills/design-toolkit/references/catalog.md" "$SKILLS_DIR/design-toolkit/references/catalog.md"
 fetch ".agents/skills/design-toolkit/references/profiles.md" "$SKILLS_DIR/design-toolkit/references/profiles.md"
 fetch ".agents/skills/apple-hig/SKILL.md" "$SKILLS_DIR/apple-hig/SKILL.md"
-fetch "AGENTS.md" "$CODEX_HOME_DIR/AGENTS.md"
+
+# Keep the global Codex context generic. Repository-specific AGENTS.md stays in
+# the repository and is loaded only for that repository.
+fetch ".toolkit/GLOBAL_AGENTS.md" "$CODEX_HOME_DIR/AGENTS.md"
 
 echo "Compatibility toolkit installed for this Codex Cloud Environment."
 echo "New repositories created from the GitHub template need no setup script."
