@@ -1,83 +1,39 @@
 # Repository-wide agent instructions
 
-## GitHub Actions budget policy
+Keep always-on guidance small. Load detailed workflow or domain documentation only when the current task needs it.
 
-Treat GitHub-hosted CI as a scarce, billable resource. Minimize GitHub Actions minutes by default.
+## Task routing and authority
 
-- Do not push after each edit. Batch related changes locally and push only when the repair or implementation cycle is ready for remote validation.
-- Use at most one push per repair cycle by default. Make an additional push only when remote-only validation is genuinely necessary and cannot be reproduced locally.
-- When CI fails, inspect and group all relevant failures first, identify likely shared root causes, then make a consolidated fix. Do not use repeated push-and-see debugging.
-- Before pushing, run every relevant check that is reasonably available locally, such as formatting, linting, type checking, targeted tests, and builds. Fix local failures before using GitHub-hosted CI.
-- Do not add diagnostic, temporary, experimental, or throwaway workflows under `.github/workflows/` merely to investigate a problem.
-- Do not create commits or pushes whose only purpose is to obtain more CI logs. Use existing run/job logs and local reproduction instead.
-- Do not proactively dispatch or otherwise invoke Full CI unless the user explicitly asks for Full CI. If an existing workflow automatically runs Full CI on push, reduce pushes rather than using CI as an iterative debugger.
-- When creating or materially editing ordinary CI workflows, configure `concurrency` and `cancel-in-progress: true` so superseded runs are cancelled. Do not change deployment/release concurrency semantics without explicit instruction.
-- Do not introduce unnecessary `push` triggers. Keep workflow event scope as narrow as repository requirements allow, using appropriate branch/path filters or pull-request events where applicable.
-- If the same ordinary verification would run for both a feature-branch `push` and the subsequent `pull_request`, prefer PR-only hosted verification plus `workflow_dispatch` unless the repository has a concrete requirement for independent push validation.
-- Preserve required branch protection, release, deployment, and security checks. Cost reduction must not silently weaken required safeguards.
+- Follow the user's current explicit task and the repository's authoritative specifications. Repository security, privacy, data-integrity, release, and product invariants remain hard boundaries unless the user explicitly changes the controlling specification.
+- Inspect the files needed to understand the requested change. Do not read a fixed stack of architecture, deployment, product, or workflow documents before every edit.
+- When a repository document is named as authoritative for the area being changed, use it. Do not load unrelated reference material merely because it exists.
+- Resolve routine implementation choices from the codebase, relevant docs, and tests without asking for approval. Stop only for a genuine blocker, an unauthorized destructive/irreversible operation, or a product/specification decision that cannot safely be inferred.
 
-### Preferred repair loop
+## GitHub Actions budget
 
-1. Inspect the repository, current diff, workflow definitions, and all available failing CI evidence.
-2. Reproduce failures locally where possible.
-3. Make the complete related fix locally.
-4. Run relevant local format/lint/typecheck/test/build checks.
-5. Review the final diff and confirm no temporary workflow/debug artifacts were added.
-6. Commit coherently and publish once using the environment's supported GitHub path.
-7. Only if remote CI reveals a genuinely remote-only issue, repeat the loop and make the minimum additional publication/update.
+Treat GitHub-hosted CI as a scarce, billable resource.
+
+- Batch related work and use one push per repair/implementation cycle by default.
+- Run the locally available checks relevant to the requested change before using hosted CI. Do not run unrelated suites merely to be exhaustive.
+- When CI fails, inspect the related failures together and make a consolidated fix. Do not use repeated push-and-see debugging.
+- Do not create temporary/diagnostic workflows or commits whose purpose is only to obtain more CI logs.
+- Do not proactively dispatch Full CI unless the user explicitly asks for it. Preserve required branch-protection, release, deployment, and security checks.
+- When materially editing ordinary CI, avoid duplicate feature-branch `push` + `pull_request` verification unless required, and use `concurrency` / `cancel-in-progress: true` where appropriate. Do not alter deployment/release concurrency semantics without explicit instruction.
 
 ## Long-running Codex work
 
-For substantial multi-step work, use the repo-local `project-long-run` skill and the active bounded objective in `docs/CODEX_LONG_RUN.md`.
+Use the repo-local `project-long-run` skill only for a substantial autonomous task with an active bounded objective in `docs/CODEX_LONG_RUN.md`, or when the user explicitly asks to establish such an objective.
 
-- Do not invent work when the bounded objective is `INACTIVE`.
-- Read repository-specific product/spec/security/architecture rules before implementation; they override the generic long-run skill.
-- Continue through implementation, local verification, repair, final diff review, and coherent commit by default.
-- Read `docs/CODEX_CLOUD_PUBLICATION.md` before attempting GitHub publication from a Codex Cloud task.
-- Do not assume the Codex Cloud sandbox shell has `origin`, GitHub credentials, `gh` authentication, or a callable PR tool. Make at most one lightweight publication capability check; do not waste time repairing remotes/auth inside the sandbox.
-- If a native Codex PR/publish action is callable, use it. If it is not callable, return the documented `PUBLICATION_PENDING_UI` handoff and instruct the user to use the Codex task's Create PR / Push PR / Publish control rather than repeatedly attempting shell `git push`.
-- For non-cloud environments with a genuinely authenticated remote, the normal completion path remains: commit, one push by default, create/update the intended PR, and return its URL.
-- Do not report a delegated implementation as GitHub-handed-off until its finished work is GitHub-visible. Never invent a PR URL.
-- If CI or review feedback requires a follow-up, normally repair the same PR branch instead of creating a replacement PR.
-- Do not stop for routine implementation decisions that can be resolved from the repository, tests, authoritative docs, or the active objective.
-- Stop only for a genuine blocker, destructive/irreversible operation not authorized by the objective, or a product/spec decision that cannot safely be inferred.
+- `Current bounded objective` is the completion contract. If it is `INACTIVE`, do not invent a long-running objective from TODOs, old branches, or historical notes.
+- Read only the authoritative docs named by the active objective or required by the area being changed.
+- Continue through implementation, relevant local verification, repair, final-diff review, and coherent commit until the objective's stopping condition is satisfied or a genuine blocker is reached.
+- Load `docs/CODEX_CLOUD_PUBLICATION.md` only when publication from Codex Cloud is actually relevant. Do not spend task time repairing absent sandbox remotes/authentication.
+- Follow-up CI/review repairs should normally update the same PR branch rather than create a replacement PR.
 
-Repos created from this template are intended to be automatically discoverable by the user's hourly ChatGPT `Codex PR Watch` monitoring task through the shared long-run markers in this repository. Repository files cannot create or resume that external ChatGPT task themselves; follow the handoff notes in `docs/CODEX_LONG_RUN.md`.
+## ChatGPT -> Codex delegation
 
-## Cross-repository ChatGPT -> Codex delegation contract
+Only when preparing or processing a ChatGPT-to-Codex handoff, read `docs/CHATGPT_CODEX_HANDOFF.md`. Do not load that handoff contract for ordinary repository work.
 
-This is a user-level operating rule and is not limited to one repository. Apply it to every existing repository the user works on and to every repository created from this template.
+## Design skills
 
-- When ChatGPT judges that implementation should be delegated to Codex instead of being performed directly in the current chat, the user-facing response must begin with the exact sentence: `codexに投げるべきと判断しました。`
-- Immediately after that sentence, provide the complete ready-to-paste Codex instruction. Do not require the user to reconstruct scope, acceptance criteria, file paths, verification steps, or constraints from surrounding conversation.
-- Every normal Codex Cloud implementation prompt must separate implementation from publication: require self-review, local verification, and a coherent commit; then require use of a callable native Codex PR/publish path when available, otherwise a `PUBLICATION_PENDING_UI` handoff. Do not tell Cloud tasks to spend time manufacturing an `origin` remote or GitHub login inside the sandbox.
-- Every local/CLI Codex prompt running in an authenticated Git repository may retain the normal `commit -> push -> PR -> PR URL` handoff.
-- When independent write scopes make safe parallelism possible, split the work into clearly named tasks and state that they may be submitted to Codex concurrently.
-- Preserve repository-specific constraints in every generated Codex prompt, including authoritative docs, allowed/out-of-scope paths, local verification, GitHub Actions budget rules, and the expected PR handoff.
-- If ChatGPT judges that direct work is more efficient, do not emit the delegation sentence; continue the work directly.
-- After a Codex PR becomes GitHub-visible, ChatGPT should normally inspect the diff, CI/check state, and review threads itself; make or specify consolidated repairs on the same PR; and merge when appropriate and authorized, rather than making the user manually relay routine review/fix steps.
-- The PR monitor can only act on GitHub-visible branches/PRs. `PUBLICATION_PENDING_UI` is therefore not monitorable until the user publishes the task through the Codex UI/client.
-- A successful Codex PR is not automatically the end of the workflow. ChatGPT should decide whether the next bounded objective can begin, whether a quality/product decision is required, or whether another repair cycle is needed.
-- Current ChatGPT tooling may monitor GitHub and prepare the next Codex prompt, but it must not imply that a fresh Codex Cloud task has been launched automatically unless an actual Codex task-launch tool is available and used. Until then, the user submits the next ready-to-paste Codex instruction when a new Codex task is required.
-
-## Design resources
-
-Repo-local Codex skills live under `.agents/skills/` and require no Cloud Environment setup.
-
-- For UI work that should feel less generic, less template-like, or less AI-generated, use the `hallmark` skill.
-- When the user names a visual reference such as Linear, Apple, Figma, Stripe, Notion, Airbnb, Vercel, etc., use the `design-toolkit` skill.
-- For Apple-platform interface work, also use `apple-hig`.
-- If the user asks you to choose a design direction, use `design-toolkit` to compare a small number of suitable references before implementing.
-- Use named brands as visual references only. Do not copy logos, trademarks, proprietary assets, distinctive branded illustrations, or exact page compositions.
-
-<!-- BEGIN subagent-wait-policy -->
-## Subagent wait policy
-
-Apply this rule whenever waiting for a spawned subagent:
-
-- Every `wait_agent` call must explicitly set `timeout_ms` to twice the estimated remaining time until completion, expressed in milliseconds.
-- If the remaining time cannot be estimated, use `timeout_ms: 120000`.
-- Do not shorten the timeout merely to poll for status. A completion notification ends the wait early.
-- After a timeout, update the remaining-time estimate and apply the same rule again.
-- This policy applies uniformly to every parent agent and every subagent wait.
-<!-- END subagent-wait-policy -->
+Use the repo-local design skills only when their descriptions match the current task. Do not load design references for non-design work.
