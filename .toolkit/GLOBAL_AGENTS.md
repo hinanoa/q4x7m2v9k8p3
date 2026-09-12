@@ -10,3 +10,9 @@ Keep global instructions minimal. Repository-local `AGENTS.md`, authoritative sp
 - Treat GitHub-hosted CI as a scarce resource: validate relevant changes locally where possible, batch repairs, and use one push per repair cycle by default. Do not use repeated push-and-see debugging or temporary workflows.
 - Do not proactively run Full CI unless the user explicitly requests it or a repository-specific release/security rule requires it.
 - Stop only for a genuine blocker, an unauthorized destructive/irreversible operation, or a specification/product decision that cannot safely be inferred.
+
+## Subagent budget
+
+Default to single-agent execution. Do not spawn subagents for routine repository inspection, file reading, status checks, simple research, sequential work, or changes the primary agent can complete directly.
+
+Spawn the minimum number of subagents only when the user explicitly requests parallel agents or when independent parallel work/specialized investigation has a clear expected benefit that outweighs the additional token and context cost. Give each subagent a distinct non-overlapping scope and concrete deliverable. Do not spawn duplicate reviewer/research agents for the same question, and do not replace a usable subagent result by launching another agent without a concrete reason.
