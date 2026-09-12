@@ -4,7 +4,8 @@ This repository is intended to be used as a GitHub template for Codex projects. 
 
 The agent guidance is intentionally split so ordinary tasks do not load workflow material they do not need:
 
-- `AGENTS.md`: compact always-on task routing, hard boundaries, CI budget, and pointers to on-demand guidance.
+- `.toolkit/GLOBAL_AGENTS.md`: minimal generic guidance used only by legacy Cloud Environment bootstrap; it contains no repository-specific workflow.
+- `AGENTS.md`: compact repository-local task routing, hard boundaries, CI budget, and pointers to on-demand guidance.
 - `.agents/skills/project-long-run`: minimal router/execution contract for an **active bounded** long-running objective.
 - `docs/CODEX_LONG_RUN.md`: only the current bounded objective and its stopping condition; starts `INACTIVE`.
 - `docs/CHATGPT_CODEX_HANDOFF.md`: loaded only for ChatGPT -> Codex delegation/publication continuation.
@@ -13,7 +14,7 @@ The agent guidance is intentionally split so ordinary tasks do not load workflow
 
 ## Operating rules
 
-1. Do not turn `AGENTS.md` into a repository manual. Put detailed domain guidance in authoritative docs and route to it only when the task touches that domain.
+1. Do not turn global or repository `AGENTS.md` into a repository manual. Put detailed domain guidance in authoritative docs and route to it only when the task touches that domain.
 2. Do not require a fixed stack of docs before every edit. The active task/objective should name the authoritative docs it actually needs.
 3. Keep skill descriptions short and specific enough to prevent accidental activation. A skill root should route to deeper references rather than duplicate them.
 4. A long-running task must define what completion means. Continue through required execution/inspection/repair until that stopping condition is met; do not use an unbounded "never stop" instruction.
@@ -22,6 +23,7 @@ The agent guidance is intentionally split so ordinary tasks do not load workflow
 7. When ChatGPT decides to delegate to Codex, follow `docs/CHATGPT_CODEX_HANDOFF.md`; otherwise do not load that contract.
 8. CI/review repairs normally update the same PR branch.
 9. Repositories created from this template can still be discovered by the user's GitHub/Codex monitoring workflow through `docs/CODEX_LONG_RUN.md` and `.agents/skills/project-long-run/SKILL.md`.
+10. The legacy `cloud/setup.sh` installs `.toolkit/GLOBAL_AGENTS.md` into Codex home rather than copying a repository-specific `AGENTS.md` into global context.
 
 ## Fixed Codex launch prompt
 
