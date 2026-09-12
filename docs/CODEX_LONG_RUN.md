@@ -1,38 +1,14 @@
 # Codex long-run handoff
 
-This file is the stable handoff point for substantial autonomous Codex work.
+This file is the task contract for substantial autonomous Codex work. Keep the active objective bounded and verifiable; put generic delegation/publication details in their dedicated docs instead of repeating them here.
 
 ## Fixed launch instruction
-
-For normal Codex Cloud delegation, use:
 
 ```text
 docs/CODEX_LONG_RUN.md の Current bounded objective を最後まで実行してください。AGENTS.md と project-long-run skill に従ってください。
 ```
 
-The repository-specific `AGENTS.md` rules always take precedence over this generic handoff.
-
-## Cross-repository ChatGPT delegation contract
-
-The following rule applies to all of the user's repositories, not only repositories created from this template.
-
-When ChatGPT decides that a task should be delegated to Codex, the user-facing response must begin with the exact sentence:
-
-```text
-codexに投げるべきと判断しました。
-```
-
-That sentence must be followed immediately by a complete ready-to-paste Codex instruction. The instruction should contain the relevant repository, authoritative docs, goal, scope, out-of-scope boundaries, required implementation, local verification, GitHub Actions budget constraints, stopping condition, and PR handoff. When safe parallel work exists, ChatGPT should split the work into independent prompts that may be launched concurrently.
-
-For Codex Cloud work, read `docs/CODEX_CLOUD_PUBLICATION.md`. The task must self-review, validate, and create a coherent local commit. It must not assume the sandbox shell has an authenticated `origin`, `gh`, or GitHub token. If the task exposes a callable native Codex PR/publish mechanism, use it. Otherwise return a `PUBLICATION_PENDING_UI` handoff containing the branch/worktree, commit SHA, intended base, proposed PR title/body, verification results, and exact blocker, and tell the user to use the Codex task's Create PR / Push PR / Publish control. Do not repeatedly attempt shell push/auth workarounds and never invent a PR URL.
-
-For local/CLI Codex work with an authenticated remote, the conventional handoff remains self-review -> commit -> push -> create/update PR -> return PR URL.
-
-When direct work by ChatGPT is more efficient, ChatGPT should proceed directly instead of emitting the delegation sentence.
-
-After a Codex PR becomes GitHub-visible, ChatGPT should normally handle routine PR review and continuation itself: inspect the diff/checks/review state, consolidate repairs on the same PR, and merge when appropriate and authorized. The user should not be used as a manual relay for ordinary PR inspection and repair steps.
-
-The GitHub PR monitor only sees GitHub-visible state. It cannot see a Cloud task that is still `PUBLICATION_PENDING_UI`. Unless a real Codex task-launch tool is available and used, the user still submits the next Codex instruction when a new Codex execution is required.
+For ChatGPT -> Codex delegation rules, use `docs/CHATGPT_CODEX_HANDOFF.md` only when preparing or continuing a handoff. For Codex Cloud publication, use `docs/CODEX_CLOUD_PUBLICATION.md` only when publication is relevant.
 
 ## Current bounded objective
 
@@ -40,42 +16,25 @@ The GitHub PR monitor only sees GitHub-visible state. It cannot see a Cloud task
 
 Do not start substantial autonomous implementation from this file while this section is inactive.
 
-Before activating it, replace `INACTIVE` with one bounded objective that contains all of the following:
+When activating it, replace `INACTIVE` with one objective containing only the task-specific contract:
 
-- Goal: what outcome must exist when the task is complete.
-- Scope: directories/components/features that may be changed.
-- Out of scope: explicit boundaries that must not be crossed.
-- Authority: project/specification documents that control behavior.
-- Required implementation: concrete deliverables, including migration/schema/docs/tests when relevant.
-- Local verification: exact or discoverable formatter/lint/typecheck/test/build commands that must be run locally where possible.
-- PR handoff: follow `docs/CODEX_CLOUD_PUBLICATION.md` for Cloud tasks; use normal commit/push/PR handoff only when an authenticated remote is genuinely available.
-- Stopping condition: objective evidence that determines completion.
-- Blockers: conditions that justify stopping for user input.
+- **Goal:** the concrete outcome required.
+- **Scope:** files/components/features that may change.
+- **Out of scope:** boundaries that matter for this task.
+- **Authority:** only the specifications/docs that control this work.
+- **Required implementation:** concrete deliverables.
+- **Verification:** relevant local checks and any required human-only review.
+- **Stopping condition:** objective evidence that defines completion.
+- **Blockers:** conditions that justify stopping for user input.
 
-## Follow-up repair contract
+Do not copy generic repository instructions into the objective. `AGENTS.md` and the matching skill already apply.
 
-If a PR created from this objective later fails CI or receives actionable review feedback, the follow-up objective should normally target the **same PR branch**. Diagnose all related failures together, repair locally, rerun relevant checks, then publish a consolidated update rather than opening a replacement PR or repeatedly pushing speculative fixes.
+## Repair and continuation
+
+If CI, review, or local verification exposes defects caused by the objective, diagnose related failures together, repair the same work branch, rerun the affected checks, and continue until the stopping condition is met or a genuine blocker is reached.
+
+A first implementation is not the stopping condition when the objective also requires execution, inspection, repair, or validation.
 
 ## Parallel execution
 
-Multiple Codex tasks may run in parallel only when their write scopes are independent or intentionally coordinated. Do not assign simultaneous tasks that modify the same architectural foundation unless an explicit integration plan exists.
-
-## ChatGPT PR monitoring handoff
-
-Repos created from the shared hinanoa template are intended to participate in the user's ChatGPT `Codex PR Watch` monitoring workflow. The repository itself cannot register or resume a ChatGPT Scheduled/Monitoring task.
-
-The watch is expected to run hourly and automatically discover accessible `hinanoa` repositories that contain both of these long-run markers:
-
-- `docs/CODEX_LONG_RUN.md`
-- `.agents/skills/project-long-run/SKILL.md`
-
-For discovered repositories, the watch should:
-
-1. monitor new/updated Codex or agent branches, PR diffs, CI/check state, and review threads;
-2. notify only on material state changes;
-3. when repair is needed, provide a ready-to-paste Codex follow-up instruction for the same PR;
-4. when a PR passes, provide the next Codex instruction or identify the product decision needed before another bounded objective can be activated;
-5. treat a GitHub-visible Codex branch with no PR as an incomplete publication handoff and provide/create the appropriate PR continuation when authorized;
-6. remember that a `PUBLICATION_PENDING_UI` Cloud task is invisible to GitHub monitoring until the user publishes it through the Codex client.
-
-No per-repository watch-list edit should normally be required for a repository created from this template. If the monitoring task is paused or unavailable, tell the user rather than assuming the repository is being watched.
+Parallel Codex tasks are appropriate only when their write scopes are independent or an explicit integration plan exists. Keep each task's objective and completion condition separate.
