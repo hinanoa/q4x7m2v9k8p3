@@ -4,7 +4,7 @@ Keep always-on guidance small. Load detailed workflow or domain documentation on
 
 ## Task routing and authority
 
-- Follow the user's current explicit task and the repository's authoritative specifications. Repository security, privacy, data-integrity, release, and product invariants remain hard boundaries unless the user explicitly changes the controlling specification.
+- The user's current explicit instructions take precedence over generic skill/workflow guidance. Follow the repository's authoritative specifications for everything the user has not explicitly changed. Repository security, privacy, data-integrity, release, and product invariants remain hard boundaries unless the user explicitly changes the controlling specification.
 - Inspect the files needed to understand the requested change. Do not read a fixed stack of architecture, deployment, product, or workflow documents before every edit.
 - When a repository document is named as authoritative for the area being changed, use it. Do not load unrelated reference material merely because it exists.
 - Resolve routine implementation choices from the codebase, relevant docs, and tests without asking for approval. Stop only for a genuine blocker, an unauthorized destructive/irreversible operation, or a product/specification decision that cannot safely be inferred.

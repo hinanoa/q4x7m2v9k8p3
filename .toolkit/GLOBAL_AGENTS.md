@@ -2,6 +2,7 @@
 
 Keep global instructions minimal. Repository-local `AGENTS.md`, authoritative specifications, and the user's current explicit task provide task-specific guidance.
 
+- The user's current explicit instructions take precedence over generic skill and workflow guidance. Repository hard security, privacy, data-integrity, and release constraints remain binding unless the user explicitly changes the controlling specification or policy.
 - Read only the files needed for the current change. Do not preload a fixed stack of repository docs.
 - Use a skill only when its description specifically matches the task; load deeper references progressively.
 - Resolve routine implementation choices from the repository, relevant docs, and tests without asking for approval.
