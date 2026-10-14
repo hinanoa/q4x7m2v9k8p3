@@ -45,3 +45,15 @@ Only when preparing or processing a ChatGPT-to-Codex handoff, read `docs/CHATGPT
 ## Design skills
 
 Use the repo-local design skills only when their descriptions match the current task. Do not load design references for non-design work.
+
+<!-- BEGIN shared-design-quality-policy -->
+## Shared design tooling, fidelity, and acceptance gates
+
+Apply these rules to every task involving UI/UX, graphics, editable vectors/SVG, plans, layouts, visual assets, or implementation of an approved design. Preserve existing project-specific specifications, security/data constraints, and review gates; do not expand the user's requested scope merely to use a tool.
+
+1. **Prioritize Product Design for UI/UX.** Before UI/UX design, redesign, review, or implementation, check for relevant available Product Design plugin skills and prioritize using them when appropriate. Inspect the applicable project requirements first. Do not claim a skill was invoked unless it actually ran.
+2. **Consider Figma for precision vectors.** For high-precision editable vector/SVG work, explicitly assess whether Figma integration would improve editability and fidelity. Use Figma when it is available and suitable; otherwise prefer deterministic SVG/CAD/code-driven construction when that preserves exact geometry better. Keep authoritative source dimensions, positions, structure, and all unrequested elements unchanged.
+3. **Require post-implementation design comparison.** For implementation or revision based on an existing/approved design, compare the actual output with that source after implementation, covering relevant layout, geometry, dimensions, assets, visual states, interactions, and unchanged regions. Use rendered screenshots/overlays, structural or numeric checks, and documented deviations as appropriate. If the reference or testing environment is missing, mark the comparison unverified; do not silently waive it.
+4. **Disclose unavailable tooling.** If a relevant plugin or skill is unavailable, uninstalled, disconnected, unauthorized, or fails, state which tool could not be used and why. Never imply that unavailable tooling was executed or replace a quality requirement with a weaker deliverable without authorization.
+5. **Never self-award acceptance.** Do not label any artifact or implementation complete, final, approved, passed, or production-ready until the user's actual acceptance criteria have been checked and met. No unauthorized simplifications, omissions, placeholders, schematic stand-ins, or approximate substitutions. Report what was verified, what remains, what could not be checked and why, and preserve any mandatory human approval gate.
+<!-- END shared-design-quality-policy -->
