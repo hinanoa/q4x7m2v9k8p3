@@ -57,3 +57,17 @@ Apply these rules to every task involving UI/UX, graphics, editable vectors/SVG,
 4. **Disclose unavailable tooling.** If a relevant plugin or skill is unavailable, uninstalled, disconnected, unauthorized, or fails, state which tool could not be used and why. Never imply that unavailable tooling was executed or replace a quality requirement with a weaker deliverable without authorization.
 5. **Never self-award acceptance.** Do not label any artifact or implementation complete, final, approved, passed, or production-ready until the user's actual acceptance criteria have been checked and met. No unauthorized simplifications, omissions, placeholders, schematic stand-ins, or approximate substitutions. Report what was verified, what remains, what could not be checked and why, and preserve any mandatory human approval gate.
 <!-- END shared-design-quality-policy -->
+
+<!-- BEGIN shared-proportionate-implementation-policy -->
+## Proportionate implementation: avoid over-defensive complexity
+
+Apply these rules to code changes without weakening authoritative specifications, actual security/privacy requirements, required error handling, tests, or the user's acceptance criteria.
+
+1. **Keep cohesive logic together.** Prefer one function unless extraction enables meaningful reuse or composition, isolates a genuinely complex boundary, or clearly improves readability. Do not combine unrelated responsibilities merely to reduce function count.
+2. **Validate once at the owning trust boundary.** Validate unknown/untrusted values on entry and pass typed/narrowed values inward. Do not repeat `typeof value === "object"` or property-existence checks for values already guaranteed by a schema, constructor, or internal type. Validate again when crossing a new trust boundary or when a guarantee no longer holds.
+3. **Do not extract single-use helpers preemptively.** Inline simple, one-off logic at the call site. Extract when reused, when hiding genuinely complex behavior or boundaries, or when a clear independent name improves the caller.
+4. **Do not implement speculative defenses without justification.** For an extremely unlikely race or security edge case that is not required by a specification or credible threat model, first explain the concrete failure mode, likelihood, and complexity/maintenance cost; obtain the user's approval before expanding scope. Never use this rule to omit required safeguards, known vulnerability fixes, or reproducible bug fixes.
+5. **Avoid unnecessary `try`/`catch`.** Do not add broad catch-and-ignore wrappers or repeatedly handle errors already handled at a boundary. Retain purposeful error handling for real failure paths, cleanup/rollback, recovery, and security/reliability contracts.
+
+Keep verification proportionate: write meaningful tests for affected behavior and realistic failures rather than redundant empty checks. Preserve all required tests, security checks, and release/acceptance gates.
+<!-- END shared-proportionate-implementation-policy -->
